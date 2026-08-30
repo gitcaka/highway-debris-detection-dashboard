@@ -2,6 +2,9 @@
 
 一个面向演示场景的高速公路抛洒物零样本感知与协同预警可视化页面。页面展示路侧 RSU、车载 OBU、路网风险态势、协同预警指标和事件处置追踪。
 
+- 在线演示：https://gitcaka.github.io/highway-debris-detection-dashboard/
+- GitHub 仓库：https://github.com/gitcaka/highway-debris-detection-dashboard
+
 > 当前数据均为前端模拟数据，不连接真实检测模型、摄像头或业务接口。页面右下角已标注“演示环境”。
 
 ## 页面结构
