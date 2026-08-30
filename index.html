@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#061224">
+    <meta name="description" content="高速公路抛洒物零样本感知与协同预警演示大屏">
+    <title>高速公路抛洒物感知预警平台</title>
+    <link rel="stylesheet" href="static/css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body>
+    <div class="ambient-grid" aria-hidden="true"></div>
+    <header class="topbar">
+        <div class="brand-block">
+            <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+            <div><strong>路网智感</strong><small>HIGHWAY VISION</small></div>
+        </div>
+        <div class="title-block">
+            <p>多源协同 · 零样本识别 · 分级预警</p>
+            <h1>高速公路抛洒物感知预警平台</h1>
+        </div>
+        <div class="system-block">
+            <div class="system-status"><span class="status-dot"></span>系统运行正常</div>
+            <time id="sysTime" datetime="">--</time>
+        </div>
+    </header>
+
+    <main class="dashboard-shell">
+        <section class="dashboard-column column-left" aria-label="路侧感知与协同概况">
+            <article class="panel camera-panel roadside-panel">
+                <header class="panel-header">
+                    <div><span class="panel-index">01</span><h2>路侧 RSU 边缘感知</h2></div>
+                    <span class="panel-tag online"><i></i>2 路在线</span>
+                </header>
+                <div class="camera-stack">
+                    <button class="camera-view" id="cam1" type="button" aria-label="查看路侧 RSU-01 实时检测详情">
+                        <img src="static/img/demo4.gif" alt="RSU-01 道路抛洒物检测画面">
+                        <span class="camera-shade"></span>
+                        <span class="camera-topline"><span><i class="live-dot"></i>RSU-01 · 盘龙立交 K12+480</span><span>1080P / 25FPS</span></span>
+                        <span class="detection-box high" id="c1-box" style="--box-x:52%; --box-y:43%; --box-w:19%; --box-h:27%;"><span class="detection-label" id="c1-label">木箱 92.4%</span></span>
+                        <span class="camera-metrics">
+                            <span><small>目标类型</small><b id="c1-obj">木箱</b></span>
+                            <span><small>置信度</small><b id="c1-conf">92.4%</b></span>
+                            <span><small>风险评估</small><b id="c1-risk" class="risk-text high">高风险</b></span>
+                        </span>
+                    </button>
+                    <button class="camera-view" id="cam3" type="button" aria-label="查看 RSU-01 风险场分析详情">
+                        <img src="static/img/demo5.gif" alt="RSU-01 风险场分析画面">
+                        <span class="camera-shade"></span>
+                        <span class="camera-topline"><span><i class="live-dot"></i>RSU-01 · 风险场分析</span><span>TTC 2.8s</span></span>
+                        <span class="detection-box high" id="c3-box" style="--box-x:50%; --box-y:39%; --box-w:22%; --box-h:31%;"><span class="detection-label" id="c3-label">碰撞风险区</span></span>
+                        <span class="camera-metrics">
+                            <span><small>危险目标</small><b id="c3-obj">木箱</b></span>
+                            <span><small>预计影响</small><b id="c3-conf">后方 6 车</b></span>
+                            <span><small>处置优先级</small><b id="c3-risk" class="risk-text high">立即处置</b></span>
+                        </span>
+                    </button>
+                </div>
+            </article>
+
+            <article class="panel overview-panel">
+                <header class="panel-header compact">
+                    <div><span class="panel-index">02</span><h2>协同感知概况</h2></div><span class="data-note">今日累计</span>
+                </header>
+                <div class="metric-grid">
+                    <div class="metric-card"><span class="metric-icon nodes" aria-hidden="true"></span><span><small>在线感知节点</small><strong id="nodeCount">15,284</strong><em>个</em></span><i>99.2%</i></div>
+                    <div class="metric-card"><span class="metric-icon alert" aria-hidden="true"></span><span><small>生成协同预警</small><strong id="warningCount">842</strong><em>次</em></span><i>+12.6%</i></div>
+                    <div class="metric-card"><span class="metric-icon shield" aria-hidden="true"></span><span><small>引导车辆避险</small><strong id="avoidCount">4,156</strong><em>辆</em></span><i>98.7%</i></div>
+                </div>
+            </article>
+
+            <article class="panel trend-panel">
+                <header class="panel-header compact">
+                    <div><span class="panel-index">03</span><h2>预警触达与通信时延</h2></div><span class="data-note">近 24 小时</span>
+                </header>
+                <div class="chart-box" id="lineChart" aria-label="24小时预警触达数与通信时延折线图"><div class="chart-placeholder">图表资源加载中…</div></div>
+            </article>
+        </section>
+
+        <section class="dashboard-column column-center" aria-label="路网态势与风险统计">
+            <article class="panel map-panel">
+                <header class="map-toolbar">
+                    <div><span class="eyebrow">ROAD NETWORK SITUATION</span><h2>实时风险态势</h2></div>
+                    <div class="map-summary">
+                        <span><i class="legend-dot high"></i>高风险 <b>2</b></span><span><i class="legend-dot medium"></i>中风险 <b>1</b></span><span><i class="legend-dot low"></i>低风险 <b>1</b></span>
+                    </div>
+                </header>
+                <div class="map-stage">
+                    <div class="map-fallback" id="mapFallback" aria-hidden="true">
+                        <span class="road road-a"></span><span class="road road-b"></span><span class="road road-c"></span>
+                        <span class="fallback-node high" style="left:58%;top:44%"><i></i><b>盘龙立交</b></span>
+                        <span class="fallback-node high" style="left:30%;top:58%"><i></i><b>西环立交</b></span>
+                        <span class="fallback-node medium" style="left:48%;top:66%"><i></i><b>二郎段</b></span>
+                        <span class="fallback-node low" style="left:67%;top:30%"><i></i><b>大公馆</b></span>
+                    </div>
+                    <div class="chart-box map-chart" id="networkMap" aria-label="重庆主城高速风险事件路网态势"></div>
+                    <div class="map-hint"><span class="mouse-icon"></span>点击风险点联动路侧画面</div>
+                    <div class="map-focus-card" id="mapFocusCard">
+                        <div class="focus-risk high"><i></i><span>当前最高风险</span></div>
+                        <strong id="focusLocation">盘龙立交 K12+480</strong>
+                        <p><span id="focusObject">木箱</span><i></i><span id="focusConfidence">置信度 92.4%</span><i></i><span id="focusSource">RSU-01</span></p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="panel ranking-panel">
+                <header class="panel-header compact">
+                    <div><span class="panel-index">04</span><h2>风险频发路段排行</h2></div><span class="data-note">本月事件数</span>
+                </header>
+                <div class="ranking-content">
+                    <div class="chart-box" id="barChart" aria-label="本月风险频发路段排行柱状图"><div class="chart-placeholder">图表资源加载中…</div></div>
+                    <div class="ranking-insight"><span>重点关注</span><strong>盘龙段</strong><p>较上月 <b>↑ 18.5%</b></p></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="dashboard-column column-right" aria-label="车端感知与事件追踪">
+            <article class="panel camera-panel onboard-panel">
+                <header class="panel-header">
+                    <div><span class="panel-index">05</span><h2>车载 OBU 协同感知</h2></div><span class="panel-tag online"><i></i>2 路在线</span>
+                </header>
+                <div class="camera-stack">
+                    <button class="camera-view" id="cam2" type="button" aria-label="查看渝A车辆检测详情">
+                        <img src="static/img/demo2.png" alt="夜间车载摄像头抛洒物检测画面">
+                        <span class="camera-shade"></span>
+                        <span class="camera-topline"><span><i class="live-dot"></i>渝A·8T*** · 前视相机</span><span>OBU-0284</span></span>
+                        <span class="detection-box high" id="c2-box" style="--box-x:44%; --box-y:46%; --box-w:13%; --box-h:17%;"><span class="detection-label" id="c2-label">轮胎 85.1%</span></span>
+                        <span class="camera-metrics">
+                            <span><small>目标类型</small><b id="c2-obj">轮胎</b></span><span><small>置信度</small><b id="c2-conf">85.1%</b></span><span><small>风险评估</small><b id="c2-risk" class="risk-text high">高风险</b></span>
+                        </span>
+                    </button>
+                    <button class="camera-view" id="cam4" type="button" aria-label="查看川A车辆检测详情">
+                        <img src="static/img/demo3.png" alt="日间车载摄像头抛洒物检测画面">
+                        <span class="camera-shade"></span>
+                        <span class="camera-topline"><span><i class="live-dot"></i>川A·B3*** · 前视相机</span><span>OBU-0417</span></span>
+                        <span class="detection-box medium" id="c4-box" style="--box-x:46%; --box-y:48%; --box-w:12%; --box-h:18%;"><span class="detection-label" id="c4-label">碎石 88.6%</span></span>
+                        <span class="camera-metrics">
+                            <span><small>目标类型</small><b id="c4-obj">碎石</b></span><span><small>置信度</small><b id="c4-conf">88.6%</b></span><span><small>风险评估</small><b id="c4-risk" class="risk-text medium">中风险</b></span>
+                        </span>
+                    </button>
+                </div>
+            </article>
+
+            <article class="panel event-panel">
+                <header class="panel-header compact">
+                    <div><span class="panel-index">06</span><h2>风险事件追踪</h2></div><span class="panel-tag warning"><i></i><b id="unhandledCount">2</b> 项待处置</span>
+                </header>
+                <div class="event-table-wrap">
+                    <table class="event-table"><thead><tr><th>时间</th><th>来源</th><th>位置 / 目标</th><th>风险</th><th>状态</th></tr></thead></table>
+                    <div class="event-scroll" id="eventScroll" tabindex="0" aria-label="风险事件列表，悬停可暂停滚动">
+                        <table class="event-table event-body" id="eventTable"><tbody></tbody></table>
+                    </div>
+                </div>
+                <footer class="event-footer">
+                    <span><i></i>最新数据更新于 <b id="lastUpdate">--:--:--</b></span><button type="button" id="pauseScroll">暂停滚动</button>
+                </footer>
+            </article>
+        </section>
+    </main>
+
+    <div class="demo-badge">演示环境 · 数据为模拟展示</div>
+    <div class="toast" id="linkageToast" role="status" aria-live="polite"></div>
+    <script src="static/js/dashboard.js"></script>
+</body>
+</html>
